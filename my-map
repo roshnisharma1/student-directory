@@ -1,0 +1,61 @@
+import java.util.Map.Entry;
+
+public interface MyMap<K,V> {
+	
+	// Remove all entries from map
+	public void clear();
+	
+	// Return true if specified key is in map
+	public boolean containsKey(K key);
+	
+	// Return true if map contains specified value
+	public boolean containsValue(V value);
+	
+	// Return a set of entries in the map
+	public java.util.Set<Entry<K,V>> entrySet();
+	
+	// Return value that matches specified key
+	public V get (K key);
+	
+	// Return true if map doesn't contain any entries
+	public boolean isEmpty();
+	
+	// Return a set of keys in the map
+	public java.util.Set<K> keySet();
+	
+	// Add an entry (key,value) into the map
+	public V put(K key, V value);
+	
+	// Remove an entry for specified key
+	public void remove(K key);
+	
+	// Return the number of mappings in the map
+	public int size();
+	
+	// Return a set of values in the map
+	public java.util.Set<V> values();
+	
+	// Define an inner class for Entry
+	public static class Entry<K,V> {
+		K key;
+		V value;
+		
+		// constructor
+		public Entry(K key, V value) {
+			this.key = key;
+			this.value = value;
+		}
+		
+		public K getKey() {
+			return key;
+		}
+		
+		public V getValue() {
+			return value;
+		}
+		
+		public String toString() {
+			return "[" + key + "," + value + "]";
+		}
+	}
+}
