@@ -1,0 +1,324 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class StudentInfo {
+	
+	static MyMap<String, ArrayList> map = new MyHashMap<>();
+	
+	public static void main(String[] args) {
+		
+		// Open file
+		String fileName = "hw8.txt";
+		
+		try {
+			FileReader fileReader = new FileReader(fileName);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			
+			// Read in first student's info
+			String student1ID =  bufferedReader.readLine();
+			Course student1course1 = new Course();	// First student's first course object
+			String student1course1name = bufferedReader.readLine();
+			student1course1.setCourseName(student1course1name);
+			String student1course1number = bufferedReader.readLine();
+			student1course1.setCourseNum(student1course1number);
+			String student1course1credit = bufferedReader.readLine();
+			student1course1.setCourseCredit(student1course1credit);
+			
+			Course student1course2 = new Course();	// First student's second course object
+			String student1course2name = bufferedReader.readLine();
+			student1course2.setCourseName(student1course2name);
+			String student1course2number = bufferedReader.readLine();
+			student1course2.setCourseNum(student1course2number);
+			String student1course2credit = bufferedReader.readLine();
+			student1course2.setCourseCredit(student1course2credit);
+			
+			// Add student 1's info to map
+			ArrayList<Course> student1 = new ArrayList<>();
+			student1.add(student1course1);
+			student1.add(student1course2);
+			map.put(student1ID, student1);
+			
+			// Read in second student's info
+			String student2ID = bufferedReader.readLine();
+			// Add student 2's info to map
+			ArrayList<Course> student2 = new ArrayList<>();
+			map.put(student2ID, student2);
+			
+			// Read in third student's info
+			String student3ID = bufferedReader.readLine();
+			Course student3course1 = new Course();	// third student's course object
+			String student3course1name = bufferedReader.readLine();
+			student3course1.setCourseName(student3course1name);
+			String student3course1number = bufferedReader.readLine();
+			student3course1.setCourseNum(student3course1number);
+			String student3course1credit = bufferedReader.readLine();
+			student3course1.setCourseCredit(student3course1credit);
+			
+			// Add student 3's info to map
+			ArrayList<Course> student3 = new ArrayList<>();
+			student3.add(student3course1);
+			map.put(student3ID, student3);
+			
+			bufferedReader.close();
+		} 
+		
+		catch(FileNotFoundException ex) {
+			System.out.println("Unable to open file " + fileName + ".");
+		}
+		
+		catch(IOException ex) {
+			System.out.println("Error reading file " + fileName + ".");
+		}
+		
+		Scanner input = new Scanner(System.in);	
+		int choice;
+		
+		// Repeat menu while user does not choose option to exit program
+		do {
+			System.out.println("Would you like to: ");
+			System.out.println("1. Add a student\n2. Remove a student\n3. Add a course to a student's schedule"
+					+ "\n4. Remove a course from a student's schedule\n5. View a student's course schedule"
+					+ "\n6. View the entire registrar of students' schedules\n7. Exit program");
+			choice = input.nextInt();
+			
+			switch (choice) {
+			case 1: addStudent();
+				break;
+			case 2: removeStudent();
+				break;
+			case 3: addCourse();
+				break;
+			case 4: removeCourse();
+				break;
+			case 5: viewSchedule();
+				break;
+			case 6: viewRegistrar();
+				break;
+			default: exitProgram();
+			}
+		} while (choice != 7);
+		
+	}
+	
+	// ** TO ADD A STUDENT TO THE REGISTRAR * /
+	public static void addStudent() {
+		Scanner input = new Scanner(System.in);
+		System.out.println("Enter the student's ID number: ");
+		String id = input.nextLine();
+		map.put(id, null);	// Add student to map with no courses
+		
+		// If student already exists
+		if (map.containsKey(id)) {
+			System.out.println("Student with ID " + id + " already exists in the registrar.");
+		}
+		
+		else {
+			System.out.println("Student with ID " + id + " has been added to the registrar.");
+			// Find out how many courses to add for the student
+			System.out.println("How many courses would you like to add to student " + id + "'s schedule?");
+			int numcourses = input.nextInt();
+			ArrayList<Course> studentx = new ArrayList<>();
+			
+			if (numcourses != 0) {
+				// Add courses to student's array list
+				for (int i = 0; i < numcourses; i++) {
+					Course course = new Course();
+					System.out.println("Enter the name of the course #" + (i+1) + ": ");
+					String name = input.nextLine();
+					System.out.println("Enter the course number: ");
+					String coursenum = input.nextLine();
+					System.out.println("Enter the course credits: ");
+					String credits = input.nextLine();
+					course.setCourseName(name);
+					course.setCourseNum(coursenum);
+					course.setCourseCredit(credits);
+					// Add course to array list
+					studentx.add(course);
+					map.put(id, studentx);
+					System.out.println("Course " + name + " has been added to student " + id + "'s schedule.\n");
+				}
+			}
+		}
+	}
+	
+	// ** TO REMOVE A STUDENT FROM THE REGISTRAR * /
+	public static void removeStudent() {
+		Scanner input = new Scanner(System.in);
+		System.out.println("Enter the ID of the student you would like to remove: ");
+		String id = input.nextLine();
+		
+		// If student doesn't exist 
+		if (!map.containsKey(id)) {
+			System.out.println("Student with ID " + id + " does not exist in the registrar.\n");
+		}
+		
+		else {
+			map.remove(id);
+			System.out.println("Student with ID " + id + " has been removed.\n");
+		}	
+	}
+	
+	// ** TO ADD A COURSE TO A STUDENT'S SCHEDULE * /
+	public static void addCourse() {
+		Scanner input = new Scanner(System.in);
+		
+		// Find out which student
+		System.out.println("Enter the ID of the student for which you would like to add a class: ");
+		String id = input.nextLine();
+		
+		// If student doesn't exist
+		if (!map.containsKey(id)) {
+			System.out.println("Student with ID " + id + " does not exist in the registrar.\n");
+		}
+		
+		else {
+			// Get course info
+			Course course = new Course();
+			System.out.println("Enter the name of the course: ");
+			String name = input.nextLine();
+			course.setCourseName(name);
+			System.out.println("Enter the course number: ");
+			String coursenum = input.nextLine();
+			course.setCourseNum(coursenum);
+			System.out.println("Enter the course credits: ");
+			String credits = input.nextLine();
+			course.setCourseCredit(credits);
+			
+			// Add course to student's array list of courses
+			ArrayList<Course> studentx = new ArrayList<>();
+			studentx = map.get(id);
+			studentx.add(course);
+			System.out.println("Course " + name + " has been added to student " + id + "'s schedule.\n");
+		}	
+	}
+	
+	// ** TO REMOVE A COURSE FROM A STUDENT'S SCHEDULE * /
+	public static void removeCourse() {
+		Scanner input = new Scanner(System.in);
+		
+		// Find out which student
+		System.out.println("Enter the ID of the student for which you would like to remove a class: ");
+		String id = input.nextLine();
+		
+		// If student doesn't exist
+		if (!map.containsKey(id)) {
+			System.out.println("Student with ID " + id + " does not exist in the registrar.\n");
+		}
+		
+		else {
+			System.out.println("Enter the name of the course you would like to remove for student " + id + ": ");
+			String removecourse = input.nextLine();
+			
+			// Create array list of course objects for the particular student
+			ArrayList<Course> arraylist = new ArrayList<>();
+			arraylist = map.get(id);
+			for (int i = 0; i < arraylist.size(); i++) {
+				String coursename = arraylist.get(i).getCourseName();
+				if (removecourse.equals(coursename)) {
+					arraylist.remove(i);
+					System.out.println("The course " + removecourse + " has been removed from student " + id + "'s schedule.");
+				}
+			}
+		}
+	}
+	
+	// ** TO VIEW A STUDENT'S SCHEDULE * /
+	public static void viewSchedule() {
+		Scanner input = new Scanner(System.in);
+		
+		// Find out which student
+		System.out.println("Enter the ID of the student whose schedule you would like to see: ");
+		String id = input.nextLine();
+		
+		// If student doesn't exist
+		if (!map.containsKey(id)) {
+			System.out.println("Student with ID " + id + " does not exist in the registrar.\n");
+		}
+		
+		else {
+			// Get schedule
+			System.out.println(map.get(id));
+		}
+	}
+	
+	// ** TO VIEW ALL THE STUDENTS' SCHEDULES * /
+	public static void viewRegistrar() {
+		System.out.println(map.entrySet());
+	}
+	
+	public static void exitProgram() {
+		try {
+			File file = new File("OutputFile.txt");
+			FileWriter filewriter = new FileWriter(file);
+			BufferedWriter bufferedwriter = new BufferedWriter(filewriter);
+			String output = map.toString();
+			bufferedwriter.write(output);
+			bufferedwriter.close();
+			System.out.println("Information has been saved to an output file. Program now closing.");
+		}
+		
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+
+// ** CLASS TO DEFINE COURSE OBJECTS * /
+class Course  {
+	private String courseName;
+	private String courseNum;
+	private String courseCredit;
+	
+	// Constructors
+	Course() {
+		courseName = " ";
+		courseNum = " ";
+		courseCredit = " ";
+	}
+	
+	Course(String courseName, String courseNum, String courseCredit){
+		this.courseName = courseName;
+		this.courseNum = courseNum;
+		this.courseCredit = courseCredit;
+	}
+	
+	// setters
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+	
+	public void setCourseNum(String courseNum) {
+		this.courseNum = courseNum;
+	}
+	
+	public void setCourseCredit(String courseCredit) {
+		this.courseCredit = courseCredit;
+	}
+	
+	// getters
+	public String getCourseName() {
+		return this.courseName;
+	}
+	
+	public String getCourseNum() {
+		return this.courseNum;
+	}
+	
+	public String getCourseCredit() {
+		return this.courseCredit;
+	}
+	
+	public String toString() {
+		return "Course name: " + this.getCourseName() + ", Course number: " + this.getCourseNum()
+			+ ", Course credits: " + this.getCourseCredit();
+	}
+	
+}
