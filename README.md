@@ -2,6 +2,6 @@ Description: Java code for a directory of students at a school. Each entry inclu
 
 IDE used: Eclipse
 
-Libraries used: java.util.ArrayList, java.util.Scanner, java.io.BufferedReader, java.io.BufferedWriter, java.io.File, java.io.FileNotFoundException, java.io.FileReader, java.io.FileWriter, java.io.IOException, java.util.LinkedList, 
+Libraries used: java.util.ArrayList, java.util.Scanner, java.io.BufferedReader, java.io.BufferedWriter, java.io.File, java.io.FileNotFoundException, java.io.FileReader, java.io.FileWriter, java.io.IOException, java.util.LinkedList, java.util.Map.Entry
 
 Files included: input, input-about, driver, my-map, my-hashmap
